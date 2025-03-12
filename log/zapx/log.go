@@ -16,7 +16,6 @@ var std = NewLoggerX()
 
 func NewLoggerX(opts ...Option) LoggerX {
 	logger := &loggerX{opt: initOptions(opts...)}
-
 	// 注册一个钩子函数，用于在日志输出前添加前缀
 	logger.l.WithOptions(zap.Hooks(logger.opt.hooks...))
 	return logger
@@ -41,8 +40,7 @@ func (l *loggerX) Info(args ...any) {
 }
 
 func (l *loggerX) InfoWithFields(msg string, args ...Field) {
-	//TODO implement me
-	panic("implement me")
+	l.l.Info(msg, args...)
 }
 
 func (l *loggerX) Infof(format string, args ...any) {
