@@ -28,6 +28,7 @@ var (
 )
 
 type LoggerX interface {
+	//SetLevel(level Level)
 	Debug(msg string, fields ...Field)
 	Debugf(format string, v ...interface{})
 	Debugw(msg string, keysAndValues ...interface{})
