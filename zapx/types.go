@@ -2,14 +2,15 @@ package zapx
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
-// Defines common log fields.
+type FormatType string
+
 const (
-	KeyRequestID   string = "requestID"
-	KeyUsername    string = "username"
-	KeyWatcherName string = "watcher"
+	ConsoleFormat FormatType = "console"
+	JsonFormat    FormatType = "json"
 )
 
 // Field is an alias for the field structure in the underlying log frame.
@@ -18,17 +19,7 @@ type Field = zapcore.Field
 // Level is an alias for the level structure in the underlying log frame.
 type Level = zapcore.Level
 
-var (
-	DebugLevel = zapcore.DebugLevel
-	InfoLevel  = zapcore.InfoLevel
-	WarnLevel  = zapcore.WarnLevel
-	ErrorLevel = zapcore.ErrorLevel
-	PanicLevel = zapcore.PanicLevel
-	FatalLevel = zapcore.FatalLevel
-)
-
 type LoggerX interface {
-	//SetLevel(level Level)
 	Debug(msg string, fields ...Field)
 	Debugf(format string, v ...interface{})
 	Debugw(msg string, keysAndValues ...interface{})
@@ -70,4 +61,17 @@ type LoggerX interface {
 	// Flush calls the underlying Core's Sync method, flushing any buffered
 	// log entries. Applications should take care to call Sync before exiting.
 	Flush()
+
+	SetLevel(level Level)
+}
+
+func New(opt *OptionsX, opts ...zap.Option) LoggerX {
+	if opt == nil {
+		opt = NewOptionX()
+	}
+	logger := zap.New(opt.BuildCore(), opts...)
+	return &loggerImpl{
+		lg: logger,
+		al: nil,
+	}
 }
