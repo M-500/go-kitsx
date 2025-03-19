@@ -40,6 +40,13 @@ func (o *OptionsX) BuildCore() zapcore.Core {
 	if o.Out == nil {
 		o.Out = os.Stdout
 	}
+	return zapcore.NewCore(o.BuildEncoder(), zapcore.AddSync(o.Out), o.Level)
+}
+
+func (o *OptionsX) BuildEncoder() zapcore.Encoder {
+	if o.Out == nil {
+		o.Out = os.Stdout
+	}
 	encodeLevel := zapcore.CapitalLevelEncoder
 	// when output to local path, with color is forbidden
 	if o.Format == ConsoleFormat && o.EnableColor {
@@ -64,7 +71,7 @@ func (o *OptionsX) BuildCore() zapcore.Core {
 	} else {
 		encoder = zapcore.NewJSONEncoder(encoderConfig) // use console encoder in development
 	}
-	return zapcore.NewCore(encoder, zapcore.AddSync(o.Out), o.Level)
+	return encoder
 }
 
 func WithLevel(level Level) Option {

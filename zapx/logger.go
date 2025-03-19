@@ -25,6 +25,9 @@ func New(opt *OptionsX, opts ...zap.Option) LoggerX {
 		al: nil,
 	}
 }
+func ReplaceDefault(l LoggerX) { glbStd = l }
+
+func Default() LoggerX { return glbStd }
 
 func Debug(msg string, fields ...Field) {
 	glbStd.Debug(msg, fields...)
