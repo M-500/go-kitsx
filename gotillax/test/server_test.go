@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"testing"
+	"time"
 )
 
 func TestServer(t *testing.T) {
@@ -35,7 +36,7 @@ func TestServer(t *testing.T) {
 				case websocket.PongMessage:
 				}
 				if err != nil {
-					// 读取消息失败
+					// 读取消息失败 这个err很难处理 很难区别 基本上代表连接出了问题
 					return
 				}
 				// 打印消息
@@ -43,5 +44,19 @@ func TestServer(t *testing.T) {
 			}
 		}()
 
+		go func() {
+			// 循环写消息给前端
+			ticker := time.NewTicker(time.Second * 3)
+			for item := range ticker.C {
+				err := conn.WriteMessage(websocket.TextMessage, []byte("hello"+item.String()))
+				if err != nil {
+					return
+				}
+			}
+
+		}()
+
 	})
+
+	http.ListenAndServe(":8080", nil)
 }
