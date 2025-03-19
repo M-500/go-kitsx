@@ -2,7 +2,6 @@ package zapx
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
@@ -65,13 +64,11 @@ type LoggerX interface {
 	SetLevel(level Level)
 }
 
-func New(opt *OptionsX, opts ...zap.Option) LoggerX {
-	if opt == nil {
-		opt = NewOptionX()
-	}
-	logger := zap.New(opt.BuildCore(), opts...)
-	return &loggerImpl{
-		lg: logger,
-		al: nil,
-	}
-}
+var (
+	DebugLevel = zapcore.DebugLevel
+	InfoLevel  = zapcore.InfoLevel
+	WarnLevel  = zapcore.WarnLevel
+	ErrorLevel = zapcore.ErrorLevel
+	PanicLevel = zapcore.PanicLevel
+	FatalLevel = zapcore.FatalLevel
+)
