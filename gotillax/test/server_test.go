@@ -13,7 +13,7 @@ func TestServer(t *testing.T) {
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		// 这个就是 websocket 的握手  搞升级的，或者说叫升级协议 初始化协议都行
-
+		t.Log("请求进来")
 		// conn 是一个 websocket 的连接
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
@@ -58,5 +58,5 @@ func TestServer(t *testing.T) {
 
 	})
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":10085", nil)
 }
